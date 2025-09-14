@@ -240,7 +240,8 @@ function getTitleOfDay(idx){ // 1-based day -> title
 function getBankOfDay(idx){ // [{en,ko}] 생성 (ko는 비워둠)
   const t = TOPICS[idx-1];
   const arr = Array.isArray(t?.sentences) ? t.sentences : [];
-  return arr.map(s => ({ en: String(s||''), ko: '' }));
+  return arr.map(s => (typeof s==='string' ? ({en:s,ko:''}) : s));
+
 }
 
 /* ====== Render Today (3개씩 순환, 길이는 bank 길이에 맞춤) ====== */
@@ -254,7 +255,6 @@ function renderToday(){
 
   elDayNum.textContent=day; elTitle.textContent=title; elLines.innerHTML='';
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition; const sttSupported=!!SR;
-
   lines.forEach((pair)=>{
     const text = pair.en;
     const ko   = (pair.ko||'').trim();
