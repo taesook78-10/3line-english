@@ -215,6 +215,31 @@
   .em-blue.chip { background:#eaf1ff !important; border-color:#bcd0ff !important; color:#2b4bd4 !important; }
   .nav-ctrl .speed-inline, .nav-ctrl label { color:#2b4bd4 !important; }
 </style>
+
+<style id="mobile-tight-fixes">
+  @media (max-width: 480px){
+    /* Tighten paddings/gaps a bit */
+    .wrap{ padding:12px !important; }
+    nav{ gap:6px !important; }
+    .line{ padding:12px !important; }
+    .row{ gap:8px !important; }
+
+    /* Voice row stays in one line */
+    .nav-ctrl{ display:flex !important; flex-wrap:nowrap !important; gap:6px !important; overflow:auto; align-items:center; }
+    .nav-ctrl select{ max-width:56vw !important; min-width:140px !important; }
+
+    /* KPI row under "오늘의 목표" */
+    .mobile-goalbar{ display:flex; gap:8px; flex-wrap:nowrap; overflow:auto; margin-top:8px; }
+    .mobile-goalbar .chip{ white-space:nowrap; }
+
+    /* Make vertical "오늘의 목표" horizontal on mobile */
+    .goal-title{ writing-mode:horizontal-tb !important; transform:none !important; font-size:16px !important; letter-spacing:0 !important; }
+
+    /* Thin the vertical blue rail/meter if present */
+    .progress-rail{ width:10px !important; min-width:10px !important; border-radius:10px !important; }
+  }
+</style>
+
 </head>
 <body>
   <div class="wrap">
@@ -741,5 +766,33 @@ boot();
   }
 })();
 </script>
+
+<script id="mobile-tight-script">
+(function(){
+  const isMobile = matchMedia('(max-width: 480px)').matches;
+  if (!isMobile) return;
+
+  // A) mark goal title (vertical label) to force horizontal layout
+  const goalLabel = [...document.querySelectorAll('div,span,h1,h2,h3')]
+    .find(el => /오늘의\s*목표/.test((el.textContent||'').replace(/\s+/g,' ')));
+  if (goalLabel) goalLabel.classList.add('goal-title');
+
+  // B) try to find a tall, narrow blue rail near the goal section and thin it
+  function isBlueish(c){
+    // very naive check for blue-ish backgrounds
+    return /rgb\(\s*\d+\s*,\s*\d+\s*,\s*(1[2-9]\d|2\d\d)\s*\)/.test(c) || /#([0-9a-f]{6})/i.test(c);
+  }
+  const railCandidate = [...document.querySelectorAll('div')].find(el => {
+    const cs = getComputedStyle(el);
+    const w = el.offsetWidth, h = el.offsetHeight;
+    if (h > 220 && w > 12 && w < 80) { // tall & moderately thin
+      if (isBlueish(cs.backgroundColor) || cs.backgroundImage.includes('gradient')) return true;
+    }
+    return false;
+  });
+  if (railCandidate) railCandidate.classList.add('progress-rail');
+})();
+</script>
+
 </body>
 </html>
