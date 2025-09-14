@@ -131,6 +131,90 @@
     .kpi .chip{ white-space:nowrap; }
   }
 </style>
+<style id="theme-light-strong">
+  :root{ color-scheme: light; }
+  html,body{ background:#ffffff !important; color:#0b1220 !important; }
+  h1,h2,h3,strong,b{ color:#0b1220 !important; }
+  .subtitle, .muted{ color:#475569 !important; }
+
+  .card, [class*="card"]{
+    background:#ffffff !important;
+    border:1px solid #e2e8f0 !important;
+    box-shadow:0 6px 20px rgba(2,6,23,.06) !important;
+  }
+  .line{ background:#ffffff !important; border-color:#e2e8f0 !important; }
+  .line p.ko{ color:#1f2937 !important; }
+  .chip, .pill{
+    background:#eef2ff !important;
+    border:1px solid #c7d2fe !important;
+    color:#1d4ed8 !important;
+  }
+  .tab{ background:#f1f5ff !important; border-color:#c7d2fe !important; color:#1f2a60 !important; }
+  .tab.active{ background:#e0e7ff !important; color:#0b1220 !important; }
+
+  :root{
+    --blue-600:#2563eb;
+    --blue-700:#1d4ed8;
+    --blue-800:#1e40af;
+    --ring:#93c5fd66;
+  }
+
+  .em-blue, .em-blue *{ color:var(--blue-700) !important; }
+  .em-blue.chip{
+    background:#eaf1ff !important; border-color:#bcd0ff !important; color:var(--blue-700) !important;
+  }
+  .nav-ctrl label, .nav-ctrl .speed-inline{ color:var(--blue-700) !important; }
+
+  select, input, textarea{
+    background:#ffffff !important; color:#0b1220 !important;
+    border:1px solid #cbd5e1 !important; border-radius:12px !important;
+  }
+  select:focus, input:focus, textarea:focus{
+    outline:0 !important; border-color:var(--blue-600) !important;
+    box-shadow:0 0 0 3px var(--ring) !important;
+  }
+
+  button, .btn{
+    background:#f8fafc !important; color:#0b1220 !important; border:1px solid #d1d5db !important;
+    border-radius:14px !important; transition:background .15s ease, transform .02s ease;
+  }
+  button:hover, .btn:hover{ background:#eef2f7 !important; }
+  button:active, .btn:active{ background:#e5e9f2 !important; transform:translateY(1px); }
+  button:focus-visible, .btn:focus-visible{ outline:0 !important; box-shadow:0 0 0 3px var(--ring) !important; }
+
+  .btn.pri, button.pri{
+    background:linear-gradient(180deg, #5b8cff, var(--blue-600)) !important;
+    color:#fff !important; border-color:#3b57e0 !important;
+  }
+  .btn.pri:hover, button.pri:hover{
+    background:linear-gradient(180deg, #4f7cf5, var(--blue-700)) !important;
+  }
+  .btn.pri:active, button.pri:active{
+    background:linear-gradient(180deg, #446fe6, var(--blue-800)) !important;
+  }
+  .btn.pri:disabled, button.pri:disabled{
+    filter:saturate(.7) brightness(.96); opacity:.9;
+  }
+
+  .btn-done.pri, button.btn-done.pri{
+    background:linear-gradient(180deg, #5b8cff, var(--blue-600)) !important;
+    color:#fff !important; border-color:#3b57e0 !important;
+  }
+
+  .mobile-goalbar{ margin-top:8px; }
+
+  @media (max-width:480px){
+    .nav-ctrl{ flex-wrap:nowrap !important; gap:6px !important; overflow:auto; }
+    .nav-ctrl select{ max-width:56vw !important; }
+    .mobile-goalbar{ display:flex; flex-wrap:nowrap; gap:8px; overflow:auto; }
+    .mobile-goalbar .chip{ white-space:nowrap; }
+  }
+</style>
+<style id="tune-3le-visual">
+  .em-blue, .em-blue * { color:#2b4bd4 !important; }
+  .em-blue.chip { background:#eaf1ff !important; border-color:#bcd0ff !important; color:#2b4bd4 !important; }
+  .nav-ctrl .speed-inline, .nav-ctrl label { color:#2b4bd4 !important; }
+</style>
 </head>
 <body>
   <div class="wrap">
@@ -618,6 +702,43 @@ boot();
   document.documentElement.style.setProperty('--muted', '#4a5568');
   document.documentElement.style.setProperty('--ring', '#e2e8f0');
   document.documentElement.style.setProperty('--ring-strong', '#cbd5e1');
+})();
+</script>
+<script id="theme-light-helper">
+(function(){
+  const speakBtn = [...document.querySelectorAll('button, .btn')]
+    .find(el => /말하기\s*\(연습\)/.test((el.textContent||'').replace(/\s+/g,' ')));
+  if (speakBtn) speakBtn.classList.add('pri');
+
+  const doneBtn = [...document.querySelectorAll('button, .btn')]
+    .find(el => /오늘\s*완료로\s*표시/.test((el.textContent||'').replace(/\s+/g,' ')));
+  if (doneBtn) doneBtn.classList.add('pri','btn-done');
+
+  const challengeChip = [...document.querySelectorAll('.chip, .pill, span, div')]
+    .find(el => /100일\s*챌린지/.test((el.textContent||'').replace(/\s+/g,' ')));
+  if (challengeChip) challengeChip.classList.add('em-blue');
+
+  // ensure nav-ctrl exists for speed/voice row coloring
+  const nav = document.querySelector('nav');
+  if (nav && !nav.querySelector('.nav-ctrl')) {
+    const right = [...nav.children].reverse().find(el => el.matches('div'));
+    if (right) right.classList.add('nav-ctrl');
+  }
+
+  // KPI under "오늘의 목표"
+  const goalTitle = [...document.querySelectorAll('h1,h2,h3,div,span')]
+    .find(el => /오늘의\s*목표/.test((el.textContent||'').replace(/\s+/g,' ')));
+  if (goalTitle) {
+    const goalBox = goalTitle.closest('section, .card, .box, .wrap, div') || goalTitle.parentElement;
+    if (goalBox && !goalBox.querySelector('.mobile-goalbar')) {
+      const row = document.createElement('div'); row.className = 'mobile-goalbar';
+      const chips = [...goalBox.querySelectorAll('button, .btn, .chip, .pill, label, span, div')]
+        .filter(el => /(80점|점수)/.test((el.textContent||'').replace(/\s+/g,' ')));
+      chips.forEach(el => row.appendChild(el));
+      if (goalTitle.nextSibling) goalTitle.parentNode.insertBefore(row, goalTitle.nextSibling);
+      else goalTitle.parentNode.appendChild(row);
+    }
+  }
 })();
 </script>
 </body>
