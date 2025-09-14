@@ -1,5 +1,6 @@
-// topics.js — 1~10 topics, each with 21 EN/KR sentence pairs
-export const TOPICS = [
+// ❌ (모듈 방식) export const TOPICS = [ ... ];
+// ✅ (전역 방식)
+window.TOPICS = [ 
   {
     topic: "Morning Routine",
     sentences: [
