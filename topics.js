@@ -1,4 +1,6 @@
-window.TOPICS = [
+// ❌ (모듈 방식) export const TOPICS = [ ... ];
+// ✅ (전역 방식)
+window.TOPICS = [ 
   {
     topic: "Morning Routine",
     sentences: [
@@ -261,7 +263,7 @@ window.TOPICS = [
   }
 ];
 // --- Append topics 11–20 (21 pairs each) ---
-TOPICS.push(
+window.TOPICS.push(
   {
     topic: "Household Chores",
     sentences: [
@@ -525,7 +527,7 @@ TOPICS.push(
 );
 // --- end of 11–20 ---
 // --- Append topics 21–30 (21 pairs each) ---
-TOPICS.push(
+window.TOPICS.push(
   {
     topic: "Home Maintenance & Repairs",
     sentences: [
@@ -789,7 +791,7 @@ TOPICS.push(
 );
 // --- end of 21–30 ---
 // --- Append topics 31–40 (21 pairs each) ---
-TOPICS.push(
+window.TOPICS.push(
   {
     topic: "Remote Work & Home Office",
     sentences: [
@@ -1053,7 +1055,7 @@ TOPICS.push(
 );
 // --- end of 31–40 ---
 // --- Append topics 41–50 (21 pairs each) ---
-TOPICS.push(
+window.TOPICS.push(
   {
     topic: "Gardening & Yardwork",
     sentences: [
@@ -1317,7 +1319,7 @@ TOPICS.push(
 );
 // --- end of 41–50 ---
 // --- Append topics 51–60 (21 pairs each) ---
-TOPICS.push(
+window.TOPICS.push(
   {
     topic: "Work Breaks & Lunch",
     sentences: [
@@ -1607,7 +1609,7 @@ TOPICS.push(
 );
 // --- end of 51–60 ---
 // --- Append topics 61–70 (21 pairs each) ---
-TOPICS.push(
+window.TOPICS.push(
   {
     topic: "Laundry & Clothing Care",
     sentences: [
@@ -1871,7 +1873,7 @@ TOPICS.push(
 );
 // --- end of 61–70 ---
 // --- Append topics 71–80 (21 pairs each) ---
-TOPICS.push(
+window.TOPICS.push(
   {
     topic: "Meal Prep & Cooking at Home",
     sentences: [
@@ -2135,7 +2137,7 @@ TOPICS.push(
 );
 // --- end of 71–80 ---
 // --- Append topics 81–90 (21 pairs each) ---
-TOPICS.push(
+window.TOPICS.push(
   {
     topic: "Financial Planning & Budgeting",
     sentences: [
@@ -2399,7 +2401,7 @@ TOPICS.push(
 );
 // --- end of 81–90 ---
 // --- Append topics 91–100 (21 pairs each) ---
-TOPICS.push(
+window.TOPICS.push(
   {
     topic: "Pet Care & Vet Visits",
     sentences: [
@@ -2660,7 +2662,5 @@ TOPICS.push(
       { en: "Paperwork: handled.", ko: "서류 작업: 완료." }
     ]
   }
-];
-// --- end of 91–100 ---
-
-export { TOPICS };
+);
+// --- end of 91–100 ---;
