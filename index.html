@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Daily 3 Lines — TTS · STT · Score · 100-Day</title>
   <meta name="theme-color" content="#0b1020" />
-  <link rel="manifest" href="/dailyenglish/manifest.webmanifest?v=10">
-  <link rel="apple-touch-icon" href="/dailyenglish/icon-180.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/dailyenglish/icon-192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/dailyenglish/icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icon-192.png">
   <style>
   :root{
     --bg:#0b1020; --card:#111a34; --ink:#e8eefc; --muted:#9fb0df;
@@ -88,37 +88,7 @@
   .practice .result{margin-top:12px; padding:12px; border:1px solid var(--ring); border-radius:12px; background:#0f1731}
   .feedback{display:block; font-size:12.5px; color:#cfe0ff; opacity:.95}
   </style>
-
-<style id="mobile-only-fixes">
-  /* 모바일 전용 레이아웃 수정 (웹에는 영향 없음) */
-  @media (max-width:520px){
-    /* 상단 내비 우측 컨트롤 한 줄 유지 */
-    nav > div{ flex-wrap:nowrap !important; overflow:auto !important; gap:6px !important; }
-
-    /* 모든 grid 계열을 1열로 재배치 */
-    .grid, .grids, .columns, .cols, .layout, .pane, .panes,
-    [class*="grid"], [class*="columns"], [class*="cols"]{
-      display:grid !important;
-      grid-template-columns: 1fr !important;
-      gap:12px !important;
-    }
-    .wrap, main, section{ padding:12px !important; }
-    .card{ width:100% !important; max-width:100% !important; }
-
-    /* "오늘의 목표" 세로 라벨 → 가로 라벨로 */
-    .goal-title{ writing-mode:horizontal-tb !important; transform:none !important;
-                 text-orientation:mixed !important; letter-spacing:0 !important;
-                 font-size:16px !important; white-space:normal !important; }
-
-    /* KPI 칩 줄 */
-    .mobile-goalbar{ display:flex; gap:8px; flex-wrap:nowrap; overflow:auto; margin-top:8px; }
-    .mobile-goalbar .chip{ white-space:nowrap; }
-
-    /* 파란 세로 레일 얇게 */
-    .progress-rail{ width:8px !important; min-width:8px !important; border-radius:8px !important; }
-  }
-</style>
-
+  <script src="./topics.js?v=top"></script>
 </head>
 <body>
   <div class="wrap">
@@ -230,48 +200,16 @@ function getTodayDay(){
 }
 
 /* ====== Data (100 Titles) ====== */
-const TITLES=[ 'Morning Routine','Commuting','Coffee Break','Emails','Team Meeting','Project Update','Lunch Out','Groceries','Gym','Evening Walk',
-  'Streaming Show','Weekend Plan','Laundry','Room Cleaning','Errands','Bank Visit','Pharmacy','Salon','Car Wash','Pet Care',
-  'Cooking Dinner','Takeout','Birthday Party','Small Talk','Weather Chat','Sports Talk','News Catch-up','Book Club','Movie Night','Concert',
-  'Coffee Chat','Study Session','Library Visit','Note Taking','Presentation Prep','Public Speaking','Mentor Advice','Goal Setting','Habit Tracking','Budgeting',
-  'Online Shopping','Return/Refund','Customer Service','Travel Plan','Packing','Airport','Hotel Check-in','City Tour','Photo Walk','Museum',
-  'Park Picnic','Beach Day','Hiking','Rainy Day','Snow Day','Heat Wave','Cold Snap','Sick Day','Clinic Visit','Dentist Visit',
-  'Back to Work','Overtime','Deadline Push','Celebration','Thank-you Notes','Apology','Making Plans','Canceling Plans','Running Late','Time Management',
-  'Morning Coffee','Afternoon Slump','Power Nap','Evening Class','Night Drive','Late Snack','Phone Call','Video Call','Texting','Social Media',
-  'Digital Detox','Mindfulness','Journaling','Reading','Music Playlist','Podcast','Language Practice','Networking','Interview Prep','Part-time Job',
-  'Side Project','Coding Session','Design Draft','Feedback Round','Revision','Final Review','Presentation Day','Rest Day','Family Dinner','Friends Hangout',
-  'Date Night','Neighborhood Walk','Farmer’s Market','Car Maintenance','House Plants','Recycling','Donation','Volunteering','Community Event','Holiday Prep'
-];
+const TITLES = (window.TOPICS||[]).map(t=>t.topic);
 
 /* ====== Fixed 21-line bank per topic (EN/KR) ======
    - 템플릿이지만 "고정 21문장"으로 취급됩니다(랜덤 X).
    - title을 소문자로 끼워 넣어 자연스러운 회화 문장 세트 21개.
 */
 function bank21(title){
-  const t = title.toLowerCase();
-  return [
-    {en:`I spent some time on ${t} today.`, ko:`오늘 ${t}에 시간을 좀 썼어요.`},
-    {en:`I tried to keep ${t} simple.`, ko:`${t}는 최대한 심플하게 해봤어요.`},
-    {en:`Honestly, ${t} took longer than I expected.`, ko:`솔직히 ${t}가 생각보다 오래 걸렸어요.`},
-    {en:`I finally got around to ${t}.`, ko:`드디어 ${t}를 하게 됐어요.`},
-    {en:`I checked in on ${t} after work.`, ko:`퇴근 후 ${t}를 잠깐 살펴봤어요.`},
-    {en:`Nothing fancy with ${t}—just the basics.`, ko:`${t}는 거창하게 안 하고 기본만 했어요.`},
-    {en:`I made steady progress on ${t}.`, ko:`${t}는 꾸준히 진전이 있었어요.`},
-    {en:`I kept ${t} practical, not overthinking it.`, ko:`${t}는 실용적으로, 과하게 고민하진 않았어요.`},
-    {en:`We talked about ${t} for a bit.`, ko:`${t}에 대해 잠깐 얘기했어요.`},
-    {en:`I’ll try to be more consistent with ${t}.`, ko:`${t}를 더 꾸준히 해볼게요.`},
-    {en:`Next time, I’ll plan ${t} ahead.`, ko:`다음엔 ${t}를 미리 계획해볼게요.`},
-    {en:`Small wins on ${t} still count.`, ko:`${t}에서 작은 성취도 의미 있어요.`},
-    {en:`Slow and steady works for ${t}.`, ko:`${t}는 천천히 꾸준히가 맞는 것 같아요.`},
-    {en:`I had a quick update on ${t}.`, ko:`${t} 관련해 간단히 업데이트했어요.`},
-    {en:`I kept ${t} light but useful.`, ko:`${t}는 가볍게 했지만 유익했어요.`},
-    {en:`I ran into a small hiccup with ${t}.`, ko:`${t}에서 작은 문제가 있었어요.`},
-    {en:`I sorted out a few details for ${t}.`, ko:`${t}의 몇 가지 디테일을 정리했어요.`},
-    {en:`${t} wasn’t perfect, but it moved forward.`, ko:`${t}가 완벽하진 않았지만 진전됐어요.`},
-    {en:`I wrapped up the basics of ${t}.`, ko:`${t}의 기본은 마무리했어요.`},
-    {en:`I set a simple goal for ${t} this week.`, ko:`이번 주 ${t}에 단순한 목표를 세웠어요.`},
-    {en:`I’m glad ${t} is finally on track.`, ko:`${t}가 드디어 궤도에 올라서 다행이에요.`},
-  ];
+  const T = (window.TOPICS||[]);
+  const t = T.find(x=>x.topic===title);
+  return t ? t.sentences : [];
 }
 
 /* ====== Per-day state ====== */
@@ -624,49 +562,5 @@ function updateHeaderKPI(){ document.getElementById('streak').textContent = prog
 function boot(){ initHeaderKPI(); renderToday(); renderChallenge100(); updateProgress(); }
 boot();
 </script>
-
-<script id="mobile-only-fixes-js">
-(function(){
-  const isMobile = matchMedia('(max-width: 520px)').matches;
-  if (!isMobile) return;
-
-  // A) "오늘의 목표" 라벨 가로화
-  const goalLabels = [...document.querySelectorAll('div,span,h1,h2,h3')]
-    .filter(el => /오늘의\s*목표/.test((el.textContent||'').replace(/\s+/g,' ')));
-  goalLabels.forEach(el => el.classList.add('goal-title'));
-
-  // B) KPI(80점 이상 성공 / 점수) 한 줄로, '오늘의 목표' 바로 아래
-  const goalTitle = goalLabels[0];
-  if (goalTitle){
-    const scope = goalTitle.closest('section, .card, .body, .wrap, div') || goalTitle.parentElement;
-    if (scope && !scope.querySelector('.mobile-goalbar')){
-      const row = document.createElement('div'); row.className = 'mobile-goalbar';
-      const chips = [...scope.querySelectorAll('button, .btn, .chip, .pill, label, span, div')]
-        .filter(el => /(80점|점수)/.test((el.textContent||'').replace(/\s+/g,' ')));
-      chips.forEach(el => row.appendChild(el));
-      goalTitle.parentNode.insertBefore(row, goalTitle.nextSibling);
-    }
-  }
-
-  // C) 세로 파란 레일 얇게 만들기
-  function looksBlue(c){
-    if (!c) return false;
-    if (c.includes('gradient')) return true;
-    const m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-    if (!m) return false;
-    const r=+m[1], g=+m[2], b=+m[3];
-    return b > Math.max(r,g) + 40;
-  }
-  [...document.querySelectorAll('div')].forEach(el => {
-    const cs = getComputedStyle(el);
-    const w = el.offsetWidth, h = el.offsetHeight;
-    if (h > 220 && w >= 20 && w <= 120 && looksBlue(cs.backgroundColor || '') ){
-      el.classList.add('progress-rail');
-    }
-    if (/meter|progress/i.test(el.className)) el.classList.add('progress-rail');
-  });
-})();
-</script>
-
 </body>
 </html>
