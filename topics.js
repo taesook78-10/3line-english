@@ -1,6 +1,4 @@
-// ❌ (모듈 방식) export const TOPICS = [ ... ];
-// ✅ (전역 방식)
-window.TOPICS = [ 
+window.TOPICS = [
   {
     topic: "Morning Routine",
     sentences: [
@@ -2662,7 +2660,7 @@ TOPICS.push(
       { en: "Paperwork: handled.", ko: "서류 작업: 완료." }
     ]
   }
-);
+ ];
 // --- end of 91–100 ---
 
 export { TOPICS };
