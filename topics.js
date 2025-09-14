@@ -1,4 +1,6 @@
-window.TOPICS = [
+// ❌ (모듈 방식) export const TOPICS = [ ... ];
+// ✅ (전역 방식)
+window.TOPICS = [ 
   {
     topic: "Morning Routine",
     sentences: [
@@ -522,7 +524,7 @@ TOPICS.push(
       { en: "Thanks for giving me a chance to make it right.", ko: "바로잡을 기회를 줘서 고마워." }
     ]
   }
-
+);
 // --- end of 11–20 ---
 // --- Append topics 21–30 (21 pairs each) ---
 TOPICS.push(
@@ -786,7 +788,7 @@ TOPICS.push(
       { en: "Welcome home.", ko: "새 집에 온 걸 환영해." }
     ]
   }
-
+);
 // --- end of 21–30 ---
 // --- Append topics 31–40 (21 pairs each) ---
 TOPICS.push(
@@ -1050,7 +1052,7 @@ TOPICS.push(
       { en: "Thanks for your patience—done and dusted.", ko: "기다려줘서 고마워—완료됐어." }
     ]
   }
-
+);
 // --- end of 31–40 ---
 // --- Append topics 41–50 (21 pairs each) ---
 TOPICS.push(
@@ -1314,7 +1316,7 @@ TOPICS.push(
       { en: "Proud of what we did today.", ko: "오늘 우리가 한 일이 자랑스러워." }
     ]
   }
-
+);
 // --- end of 41–50 ---
 // --- Append topics 51–60 (21 pairs each) ---
 TOPICS.push(
@@ -1604,7 +1606,7 @@ TOPICS.push(
       { en: "Good teamwork keeps the block calm.", ko: "협력이 있어야 동네가 평온해." }
     ]
   }
-
+);
 // --- end of 51–60 ---
 // --- Append topics 61–70 (21 pairs each) ---
 TOPICS.push(
@@ -1868,7 +1870,7 @@ TOPICS.push(
       { en: "Movie night is set—grab the popcorn.", ko: "무비 나이트 준비 완료—팝콘 가져와." }
     ]
   }
-
+);
 // --- end of 61–70 ---
 // --- Append topics 71–80 (21 pairs each) ---
 TOPICS.push(
@@ -2132,7 +2134,7 @@ TOPICS.push(
       { en: "Clean drive, clear mind.", ko: "드라이브가 깔끔하면 머리도 맑아져." }
     ]
   }
-
+);
 // --- end of 71–80 ---
 // --- Append topics 81–90 (21 pairs each) ---
 TOPICS.push(
@@ -2396,7 +2398,7 @@ TOPICS.push(
       { en: "Solid episode—ship it.", ko: "탄탄한 에피소드야—발행하자." }
     ]
   }
-
+);
 // --- end of 81–90 ---
 // --- Append topics 91–100 (21 pairs each) ---
 TOPICS.push(
@@ -2660,7 +2662,7 @@ TOPICS.push(
       { en: "Paperwork: handled.", ko: "서류 작업: 완료." }
     ]
   }
- ];
+);
 // --- end of 91–100 ---
 
 export { TOPICS };
