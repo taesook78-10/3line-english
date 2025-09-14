@@ -211,8 +211,6 @@ function bank21(title){
   const t = T.find(x=>x.topic===title);
   return t ? t.sentences : [];
 }
-}
-
 /* ====== Per-day state ====== */
 function ensureDayState(day){
   const k='Day'+day;
