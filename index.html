@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Daily 3 Lines — TTS · STT · Score · 100-Day</title>
   <meta name="theme-color" content="#0b1020" />
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="apple-touch-icon" href="./icon-192.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./icon-192.png">
+  <link rel="manifest" href="/dailyenglish/manifest.webmanifest?v=10">
+  <link rel="apple-touch-icon" href="/dailyenglish/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/dailyenglish/icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/dailyenglish/icon-192.png">
   <style>
   :root{
     --bg:#0b1020; --card:#111a34; --ink:#e8eefc; --muted:#9fb0df;
@@ -88,155 +88,34 @@
   .practice .result{margin-top:12px; padding:12px; border:1px solid var(--ring); border-radius:12px; background:#0f1731}
   .feedback{display:block; font-size:12.5px; color:#cfe0ff; opacity:.95}
   </style>
-  <script src="./topics.js?v=top"></script>
-<style id="mobile-light-override">
-  /* Always light theme (override dark palette) */
-  :root{
-    --bg:#ffffff; --card:#ffffff; --ink:#0b1020; --muted:#4a5568;
-    --pri:#2b4bd4; --good:#108a67; --warn:#b7791f; --bad:#d43456;
-    --ring:#e2e8f0; --ring-strong:#cbd5e1;
-    --shadow:0 8px 24px rgba(0,0,0,.08); --radius:18px;
-  }
-  body{ background:#fff !important; color:#111 !important; }
-  .card{ background:#fff !important; border-color:var(--ring) !important; box-shadow:var(--shadow) !important; }
-  .btn{ background:#f4f6fb !important; color:#1f2937 !important; border:1px solid #d1d9ee !important; }
-  .btn.pri{ background:linear-gradient(180deg,#5b8cff,#3d64ff) !important; color:#fff !important; border-color:#3b57e0 !important; }
-  .btn.warn{ background:#fff9eb !important; color:#6b4b12 !important; border-color:#e7c27a !important; }
-  .btn.ghost{ background:#fff !important; color:#111 !important; border-color:#d1d9ee !important; }
-  .tab{ background:#f1f5ff !important; color:#334155 !important; border-color:#cdd8ff !important; }
-  .tab.active{ background:#dfe8ff !important; color:#111 !important; border-color:#bcd0ff !important; }
-  select{ background:#fff !important; border-color:#d1d9ee !important; color:#111 !important; }
-  .chip{ background:#f7faff !important; border-color:#d1d9ee !important; color:#111 !important; }
-  .subtitle{ color:#6b7280 !important; }
-  .line{ background:#fff !important; border-color:#e2e8f0 !important; }
-  .line p.ko{ color:#374151 !important; }
-  .meter{ background:#f1f5f9 !important; border-color:#e2e8f0 !important; }
-  .practice .box{ background:#fff !important; border-color:#e2e8f0 !important; color:#111 !important; }
-  .hint{ background:#f6f9ff !important; border-color:#d1d9ee !important; color:#1f2937 !important; }
 
-  /* Mobile optimizations */
-  @media (max-width: 480px){
-    .wrap{ padding:12px !important; }
-    nav{ gap:6px !important; }
-    .title{ font-size:22px !important; }
-    .line{ padding:12px !important; }
-    .row .btn{ min-height:38px !important; padding:8px 12px !important; }
-    select{ min-height:38px !important; }
-    /* Voice + 속도를 한 줄에: JS가 nav-ctrl 클래스를 달면 적용 */
-    .nav-ctrl{ flex-wrap:nowrap !important; gap:6px !important; overflow:auto; }
-    .nav-ctrl .btn{ padding:6px 10px !important; min-height:36px !important; }
-    .nav-ctrl select{ max-width:56vw !important; min-width:140px !important; }
-    /* 오늘의 목표 두 칩을 한 줄에 */
-    .kpi{ flex-wrap:nowrap !important; gap:8px !important; overflow:auto; }
-    .kpi .chip{ white-space:nowrap; }
-  }
-</style>
-<style id="theme-light-strong">
-  :root{ color-scheme: light; }
-  html,body{ background:#ffffff !important; color:#0b1220 !important; }
-  h1,h2,h3,strong,b{ color:#0b1220 !important; }
-  .subtitle, .muted{ color:#475569 !important; }
+<style id="mobile-only-fixes">
+  /* 모바일 전용 레이아웃 수정 (웹에는 영향 없음) */
+  @media (max-width:520px){
+    /* 상단 내비 우측 컨트롤 한 줄 유지 */
+    nav > div{ flex-wrap:nowrap !important; overflow:auto !important; gap:6px !important; }
 
-  .card, [class*="card"]{
-    background:#ffffff !important;
-    border:1px solid #e2e8f0 !important;
-    box-shadow:0 6px 20px rgba(2,6,23,.06) !important;
-  }
-  .line{ background:#ffffff !important; border-color:#e2e8f0 !important; }
-  .line p.ko{ color:#1f2937 !important; }
-  .chip, .pill{
-    background:#eef2ff !important;
-    border:1px solid #c7d2fe !important;
-    color:#1d4ed8 !important;
-  }
-  .tab{ background:#f1f5ff !important; border-color:#c7d2fe !important; color:#1f2a60 !important; }
-  .tab.active{ background:#e0e7ff !important; color:#0b1220 !important; }
+    /* 모든 grid 계열을 1열로 재배치 */
+    .grid, .grids, .columns, .cols, .layout, .pane, .panes,
+    [class*="grid"], [class*="columns"], [class*="cols"]{
+      display:grid !important;
+      grid-template-columns: 1fr !important;
+      gap:12px !important;
+    }
+    .wrap, main, section{ padding:12px !important; }
+    .card{ width:100% !important; max-width:100% !important; }
 
-  :root{
-    --blue-600:#2563eb;
-    --blue-700:#1d4ed8;
-    --blue-800:#1e40af;
-    --ring:#93c5fd66;
-  }
+    /* "오늘의 목표" 세로 라벨 → 가로 라벨로 */
+    .goal-title{ writing-mode:horizontal-tb !important; transform:none !important;
+                 text-orientation:mixed !important; letter-spacing:0 !important;
+                 font-size:16px !important; white-space:normal !important; }
 
-  .em-blue, .em-blue *{ color:var(--blue-700) !important; }
-  .em-blue.chip{
-    background:#eaf1ff !important; border-color:#bcd0ff !important; color:var(--blue-700) !important;
-  }
-  .nav-ctrl label, .nav-ctrl .speed-inline{ color:var(--blue-700) !important; }
-
-  select, input, textarea{
-    background:#ffffff !important; color:#0b1220 !important;
-    border:1px solid #cbd5e1 !important; border-radius:12px !important;
-  }
-  select:focus, input:focus, textarea:focus{
-    outline:0 !important; border-color:var(--blue-600) !important;
-    box-shadow:0 0 0 3px var(--ring) !important;
-  }
-
-  button, .btn{
-    background:#f8fafc !important; color:#0b1220 !important; border:1px solid #d1d5db !important;
-    border-radius:14px !important; transition:background .15s ease, transform .02s ease;
-  }
-  button:hover, .btn:hover{ background:#eef2f7 !important; }
-  button:active, .btn:active{ background:#e5e9f2 !important; transform:translateY(1px); }
-  button:focus-visible, .btn:focus-visible{ outline:0 !important; box-shadow:0 0 0 3px var(--ring) !important; }
-
-  .btn.pri, button.pri{
-    background:linear-gradient(180deg, #5b8cff, var(--blue-600)) !important;
-    color:#fff !important; border-color:#3b57e0 !important;
-  }
-  .btn.pri:hover, button.pri:hover{
-    background:linear-gradient(180deg, #4f7cf5, var(--blue-700)) !important;
-  }
-  .btn.pri:active, button.pri:active{
-    background:linear-gradient(180deg, #446fe6, var(--blue-800)) !important;
-  }
-  .btn.pri:disabled, button.pri:disabled{
-    filter:saturate(.7) brightness(.96); opacity:.9;
-  }
-
-  .btn-done.pri, button.btn-done.pri{
-    background:linear-gradient(180deg, #5b8cff, var(--blue-600)) !important;
-    color:#fff !important; border-color:#3b57e0 !important;
-  }
-
-  .mobile-goalbar{ margin-top:8px; }
-
-  @media (max-width:480px){
-    .nav-ctrl{ flex-wrap:nowrap !important; gap:6px !important; overflow:auto; }
-    .nav-ctrl select{ max-width:56vw !important; }
-    .mobile-goalbar{ display:flex; flex-wrap:nowrap; gap:8px; overflow:auto; }
-    .mobile-goalbar .chip{ white-space:nowrap; }
-  }
-</style>
-<style id="tune-3le-visual">
-  .em-blue, .em-blue * { color:#2b4bd4 !important; }
-  .em-blue.chip { background:#eaf1ff !important; border-color:#bcd0ff !important; color:#2b4bd4 !important; }
-  .nav-ctrl .speed-inline, .nav-ctrl label { color:#2b4bd4 !important; }
-</style>
-
-<style id="mobile-tight-fixes">
-  @media (max-width: 480px){
-    /* Tighten paddings/gaps a bit */
-    .wrap{ padding:12px !important; }
-    nav{ gap:6px !important; }
-    .line{ padding:12px !important; }
-    .row{ gap:8px !important; }
-
-    /* Voice row stays in one line */
-    .nav-ctrl{ display:flex !important; flex-wrap:nowrap !important; gap:6px !important; overflow:auto; align-items:center; }
-    .nav-ctrl select{ max-width:56vw !important; min-width:140px !important; }
-
-    /* KPI row under "오늘의 목표" */
+    /* KPI 칩 줄 */
     .mobile-goalbar{ display:flex; gap:8px; flex-wrap:nowrap; overflow:auto; margin-top:8px; }
     .mobile-goalbar .chip{ white-space:nowrap; }
 
-    /* Make vertical "오늘의 목표" horizontal on mobile */
-    .goal-title{ writing-mode:horizontal-tb !important; transform:none !important; font-size:16px !important; letter-spacing:0 !important; }
-
-    /* Thin the vertical blue rail/meter if present */
-    .progress-rail{ width:10px !important; min-width:10px !important; border-radius:10px !important; }
+    /* 파란 세로 레일 얇게 */
+    .progress-rail{ width:8px !important; min-width:8px !important; border-radius:8px !important; }
   }
 </style>
 
@@ -351,16 +230,48 @@ function getTodayDay(){
 }
 
 /* ====== Data (100 Titles) ====== */
-const TITLES = (window.TOPICS||[]).map(t=>t.topic);
+const TITLES=[ 'Morning Routine','Commuting','Coffee Break','Emails','Team Meeting','Project Update','Lunch Out','Groceries','Gym','Evening Walk',
+  'Streaming Show','Weekend Plan','Laundry','Room Cleaning','Errands','Bank Visit','Pharmacy','Salon','Car Wash','Pet Care',
+  'Cooking Dinner','Takeout','Birthday Party','Small Talk','Weather Chat','Sports Talk','News Catch-up','Book Club','Movie Night','Concert',
+  'Coffee Chat','Study Session','Library Visit','Note Taking','Presentation Prep','Public Speaking','Mentor Advice','Goal Setting','Habit Tracking','Budgeting',
+  'Online Shopping','Return/Refund','Customer Service','Travel Plan','Packing','Airport','Hotel Check-in','City Tour','Photo Walk','Museum',
+  'Park Picnic','Beach Day','Hiking','Rainy Day','Snow Day','Heat Wave','Cold Snap','Sick Day','Clinic Visit','Dentist Visit',
+  'Back to Work','Overtime','Deadline Push','Celebration','Thank-you Notes','Apology','Making Plans','Canceling Plans','Running Late','Time Management',
+  'Morning Coffee','Afternoon Slump','Power Nap','Evening Class','Night Drive','Late Snack','Phone Call','Video Call','Texting','Social Media',
+  'Digital Detox','Mindfulness','Journaling','Reading','Music Playlist','Podcast','Language Practice','Networking','Interview Prep','Part-time Job',
+  'Side Project','Coding Session','Design Draft','Feedback Round','Revision','Final Review','Presentation Day','Rest Day','Family Dinner','Friends Hangout',
+  'Date Night','Neighborhood Walk','Farmer’s Market','Car Maintenance','House Plants','Recycling','Donation','Volunteering','Community Event','Holiday Prep'
+];
 
 /* ====== Fixed 21-line bank per topic (EN/KR) ======
    - 템플릿이지만 "고정 21문장"으로 취급됩니다(랜덤 X).
    - title을 소문자로 끼워 넣어 자연스러운 회화 문장 세트 21개.
 */
 function bank21(title){
-  const T = (window.TOPICS||[]);
-  const t = T.find(x=>x.topic===title);
-  return t ? t.sentences : [];
+  const t = title.toLowerCase();
+  return [
+    {en:`I spent some time on ${t} today.`, ko:`오늘 ${t}에 시간을 좀 썼어요.`},
+    {en:`I tried to keep ${t} simple.`, ko:`${t}는 최대한 심플하게 해봤어요.`},
+    {en:`Honestly, ${t} took longer than I expected.`, ko:`솔직히 ${t}가 생각보다 오래 걸렸어요.`},
+    {en:`I finally got around to ${t}.`, ko:`드디어 ${t}를 하게 됐어요.`},
+    {en:`I checked in on ${t} after work.`, ko:`퇴근 후 ${t}를 잠깐 살펴봤어요.`},
+    {en:`Nothing fancy with ${t}—just the basics.`, ko:`${t}는 거창하게 안 하고 기본만 했어요.`},
+    {en:`I made steady progress on ${t}.`, ko:`${t}는 꾸준히 진전이 있었어요.`},
+    {en:`I kept ${t} practical, not overthinking it.`, ko:`${t}는 실용적으로, 과하게 고민하진 않았어요.`},
+    {en:`We talked about ${t} for a bit.`, ko:`${t}에 대해 잠깐 얘기했어요.`},
+    {en:`I’ll try to be more consistent with ${t}.`, ko:`${t}를 더 꾸준히 해볼게요.`},
+    {en:`Next time, I’ll plan ${t} ahead.`, ko:`다음엔 ${t}를 미리 계획해볼게요.`},
+    {en:`Small wins on ${t} still count.`, ko:`${t}에서 작은 성취도 의미 있어요.`},
+    {en:`Slow and steady works for ${t}.`, ko:`${t}는 천천히 꾸준히가 맞는 것 같아요.`},
+    {en:`I had a quick update on ${t}.`, ko:`${t} 관련해 간단히 업데이트했어요.`},
+    {en:`I kept ${t} light but useful.`, ko:`${t}는 가볍게 했지만 유익했어요.`},
+    {en:`I ran into a small hiccup with ${t}.`, ko:`${t}에서 작은 문제가 있었어요.`},
+    {en:`I sorted out a few details for ${t}.`, ko:`${t}의 몇 가지 디테일을 정리했어요.`},
+    {en:`${t} wasn’t perfect, but it moved forward.`, ko:`${t}가 완벽하진 않았지만 진전됐어요.`},
+    {en:`I wrapped up the basics of ${t}.`, ko:`${t}의 기본은 마무리했어요.`},
+    {en:`I set a simple goal for ${t} this week.`, ko:`이번 주 ${t}에 단순한 목표를 세웠어요.`},
+    {en:`I’m glad ${t} is finally on track.`, ko:`${t}가 드디어 궤도에 올라서 다행이에요.`},
+  ];
 }
 
 /* ====== Per-day state ====== */
@@ -713,84 +624,47 @@ function updateHeaderKPI(){ document.getElementById('streak').textContent = prog
 function boot(){ initHeaderKPI(); renderToday(); renderChallenge100(); updateProgress(); }
 boot();
 </script>
-<script>
-// Tag the right-side controls in <nav> so CSS can keep them in one row on mobile
+
+<script id="mobile-only-fixes-js">
 (function(){
-  const nav = document.querySelector('nav');
-  if (!nav) return;
-  const right = [...nav.children].reverse().find(el => el.matches('div') && (el.style.marginLeft || '').includes('auto'));
-  if (right) right.classList.add('nav-ctrl');
-  // Ensure light variables are applied (in case inline styles from dark set)
-  document.documentElement.style.setProperty('--bg', '#ffffff');
-  document.documentElement.style.setProperty('--card', '#ffffff');
-  document.documentElement.style.setProperty('--ink', '#0b1020');
-  document.documentElement.style.setProperty('--muted', '#4a5568');
-  document.documentElement.style.setProperty('--ring', '#e2e8f0');
-  document.documentElement.style.setProperty('--ring-strong', '#cbd5e1');
-})();
-</script>
-<script id="theme-light-helper">
-(function(){
-  const speakBtn = [...document.querySelectorAll('button, .btn')]
-    .find(el => /말하기\s*\(연습\)/.test((el.textContent||'').replace(/\s+/g,' ')));
-  if (speakBtn) speakBtn.classList.add('pri');
-
-  const doneBtn = [...document.querySelectorAll('button, .btn')]
-    .find(el => /오늘\s*완료로\s*표시/.test((el.textContent||'').replace(/\s+/g,' ')));
-  if (doneBtn) doneBtn.classList.add('pri','btn-done');
-
-  const challengeChip = [...document.querySelectorAll('.chip, .pill, span, div')]
-    .find(el => /100일\s*챌린지/.test((el.textContent||'').replace(/\s+/g,' ')));
-  if (challengeChip) challengeChip.classList.add('em-blue');
-
-  // ensure nav-ctrl exists for speed/voice row coloring
-  const nav = document.querySelector('nav');
-  if (nav && !nav.querySelector('.nav-ctrl')) {
-    const right = [...nav.children].reverse().find(el => el.matches('div'));
-    if (right) right.classList.add('nav-ctrl');
-  }
-
-  // KPI under "오늘의 목표"
-  const goalTitle = [...document.querySelectorAll('h1,h2,h3,div,span')]
-    .find(el => /오늘의\s*목표/.test((el.textContent||'').replace(/\s+/g,' ')));
-  if (goalTitle) {
-    const goalBox = goalTitle.closest('section, .card, .box, .wrap, div') || goalTitle.parentElement;
-    if (goalBox && !goalBox.querySelector('.mobile-goalbar')) {
-      const row = document.createElement('div'); row.className = 'mobile-goalbar';
-      const chips = [...goalBox.querySelectorAll('button, .btn, .chip, .pill, label, span, div')]
-        .filter(el => /(80점|점수)/.test((el.textContent||'').replace(/\s+/g,' ')));
-      chips.forEach(el => row.appendChild(el));
-      if (goalTitle.nextSibling) goalTitle.parentNode.insertBefore(row, goalTitle.nextSibling);
-      else goalTitle.parentNode.appendChild(row);
-    }
-  }
-})();
-</script>
-
-<script id="mobile-tight-script">
-(function(){
-  const isMobile = matchMedia('(max-width: 480px)').matches;
+  const isMobile = matchMedia('(max-width: 520px)').matches;
   if (!isMobile) return;
 
-  // A) mark goal title (vertical label) to force horizontal layout
-  const goalLabel = [...document.querySelectorAll('div,span,h1,h2,h3')]
-    .find(el => /오늘의\s*목표/.test((el.textContent||'').replace(/\s+/g,' ')));
-  if (goalLabel) goalLabel.classList.add('goal-title');
+  // A) "오늘의 목표" 라벨 가로화
+  const goalLabels = [...document.querySelectorAll('div,span,h1,h2,h3')]
+    .filter(el => /오늘의\s*목표/.test((el.textContent||'').replace(/\s+/g,' ')));
+  goalLabels.forEach(el => el.classList.add('goal-title'));
 
-  // B) try to find a tall, narrow blue rail near the goal section and thin it
-  function isBlueish(c){
-    // very naive check for blue-ish backgrounds
-    return /rgb\(\s*\d+\s*,\s*\d+\s*,\s*(1[2-9]\d|2\d\d)\s*\)/.test(c) || /#([0-9a-f]{6})/i.test(c);
+  // B) KPI(80점 이상 성공 / 점수) 한 줄로, '오늘의 목표' 바로 아래
+  const goalTitle = goalLabels[0];
+  if (goalTitle){
+    const scope = goalTitle.closest('section, .card, .body, .wrap, div') || goalTitle.parentElement;
+    if (scope && !scope.querySelector('.mobile-goalbar')){
+      const row = document.createElement('div'); row.className = 'mobile-goalbar';
+      const chips = [...scope.querySelectorAll('button, .btn, .chip, .pill, label, span, div')]
+        .filter(el => /(80점|점수)/.test((el.textContent||'').replace(/\s+/g,' ')));
+      chips.forEach(el => row.appendChild(el));
+      goalTitle.parentNode.insertBefore(row, goalTitle.nextSibling);
+    }
   }
-  const railCandidate = [...document.querySelectorAll('div')].find(el => {
+
+  // C) 세로 파란 레일 얇게 만들기
+  function looksBlue(c){
+    if (!c) return false;
+    if (c.includes('gradient')) return true;
+    const m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (!m) return false;
+    const r=+m[1], g=+m[2], b=+m[3];
+    return b > Math.max(r,g) + 40;
+  }
+  [...document.querySelectorAll('div')].forEach(el => {
     const cs = getComputedStyle(el);
     const w = el.offsetWidth, h = el.offsetHeight;
-    if (h > 220 && w > 12 && w < 80) { // tall & moderately thin
-      if (isBlueish(cs.backgroundColor) || cs.backgroundImage.includes('gradient')) return true;
+    if (h > 220 && w >= 20 && w <= 120 && looksBlue(cs.backgroundColor || '') ){
+      el.classList.add('progress-rail');
     }
-    return false;
+    if (/meter|progress/i.test(el.className)) el.classList.add('progress-rail');
   });
-  if (railCandidate) railCandidate.classList.add('progress-rail');
 })();
 </script>
 
