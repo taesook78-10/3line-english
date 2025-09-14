@@ -160,8 +160,9 @@
 
 <!-- 모듈 스크립트: bank21/TITLES 제거, topics.js만 사용 -->
 <script src="./topics.js"></script>
-<script type="module">
-import { TOPICS } from './topics.js';
+<script>
+const TOPICS = window.TOPICS || [];
+
 
 /* ====== Storage / Date Utilities ====== */
 const LS_USER='d3l_user', LS_PROGRESS='d3l_progress';
