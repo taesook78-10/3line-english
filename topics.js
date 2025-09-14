@@ -1,3 +1,4 @@
+window.TOPICS = window.TOPICS || [];
 // topics.js — 1~10 topics, each with 21 EN/KR sentence pairs
 export const TOPICS = [
   {
