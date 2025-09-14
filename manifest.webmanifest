@@ -1,0 +1,22 @@
+{
+  "name": "3-Line English",
+  "short_name": "3-Line",
+  "description": "21 daily sentences per topic with EN/KR and TTS.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#4f46e5",
+  "background_color": "#0b0b0f",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
