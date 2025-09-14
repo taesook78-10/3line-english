@@ -1,5 +1,5 @@
 /* sw.js — cache for offline & install prompt (flat layout) */
-const CACHE = '3line-v1';
+const CACHE = '3line-v2';
 const ASSETS = [
   './',
   './index.html',
