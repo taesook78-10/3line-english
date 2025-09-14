@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily 3 Lines — TTS · STT · Score · 100-Day</title>
+  <meta name="theme-color" content="#0b1020" />
+  <link rel="manifest" href="/dailyenglish/manifest.webmanifest?v=10">
+  <link rel="apple-touch-icon" href="/dailyenglish/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/dailyenglish/icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/dailyenglish/icon-192.png">
+  <style>
+  :root{
+    --bg:#0b1020; --card:#111a34; --ink:#e8eefc; --muted:#9fb0df;
+    --pri:#5b8cff; --good:#21d39b; --warn:#ffb454; --bad:#ff5c7a;
+    --ring:#31457a; --ring-strong:#4a63a8;
+    --shadow:0 12px 40px rgba(0,0,0,.35);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--ink);
+    font-family:ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans KR, Apple SD Gothic Neo, sans-serif;
+    background:
+      radial-gradient(80% 60% at 10% 0%,#15224b 0%,#0b1020 60%),
+      radial-gradient(80% 60% at 100% 100%,#0f1834 0%,#0b1020 60%);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:20px}
+  header{display:flex;align-items:center;gap:14px;margin:6px 0 14px;flex-wrap:wrap}
+  h1{font-size:22px;margin:0;font-weight:800;letter-spacing:.2px}
+  .badge{padding:6px 10px;border-radius:999px;background:rgba(91,140,255,.15);color:#cfe0ff;border:1px solid var(--ring);font-size:12px}
+  nav{display:flex; gap:8px; margin:10px 0 16px; flex-wrap:wrap; align-items:center}
+  .tab{padding:10px 14px;border-radius:12px;background:#101733;border:1px solid var(--ring);cursor:pointer;color:#a7b3d6}
+  .tab.active{background:#141f45;color:var(--ink);border-color:#3a5296}
+  select{appearance:none;background:#101733;border:1px solid var(--ring);color:#e8eefc;padding:10px 12px;border-radius:10px;min-height:44px}
+  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+  @media (max-width:960px){.grid{grid-template-columns:1fr;}}
+  .card{background:linear-gradient(180deg,#111a34,#0f1731);border:1px solid var(--ring);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card .hd{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 18px 0}
+  .card .body{padding:14px 18px 20px}
+  .title{font-size:26px;margin-top:4px;font-weight:900;letter-spacing:.3px}
+  .subtitle{font-size:13px;color:var(--muted)}
+  .line{border:1px solid var(--ring);border-radius:16px;padding:14px;margin:12px 0;background:#0f1731}
+  .line p{margin:0 0 8px;font-size:18px;line-height:1.5}
+  .line p.ko{margin:0 0 10px; font-size:15.5px; line-height:1.6; color:#cbd4f5}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+  .btn{
+    appearance:none;border:none;border-radius:12px;padding:10px 14px;
+    background:#17224a;color:#e8eefc;border:1px solid #2b3f7a;cursor:pointer;min-height:44px;
+    transition:transform .06s ease, filter .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{filter:brightness(1.05)}
+  .btn:active{transform:translateY(1px)}
+  .btn[disabled]{opacity:.6;cursor:not-allowed}
+  .btn.pri{background:linear-gradient(180deg,#3d64ff,#2b4bd4);border-color:#3b57e0}
+  .btn.warn{background:#3a2a0e;border-color:#9f6b18}
+  .btn.ghost{background:transparent;border-color:#2b3f7a}
+  .btn.rec{background:linear-gradient(180deg,#ff5c7a,#e44360); border-color:#ff7f97; color:white; box-shadow:0 0 0 2px rgba(255,92,122,.25) inset}
+
+  .chip{display:inline-flex; align-items:center; gap:8px; padding:8px 12px;border:1px solid var(--ring);border-radius:12px;background:#101733;font-size:13px}
+  .chip::before{content:''; width:8px; height:8px; border-radius:50%; background:linear-gradient(180deg,#a7baff,#5b8cff); box-shadow:0 0 0 2px rgba(91,140,255,.15);}
+  .score{font-weight:900}
+
+  .meter{height:12px;background:#0e1330;border-radius:999px;border:1px solid var(--ring);overflow:hidden}
+  .meter>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff5c7a,#ffb454,#5b8cff,#21d39b)}
+
+  .kpi{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+  .calendar{display:grid;grid-template-columns:repeat(10,1fr);gap:8px}
+  .day{aspect-ratio:1/1;border:1px solid #2d3d72;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#0e1430;color:#c9d4ff;font-weight:700; font-size:14px}
+  @media (max-width:520px){ .calendar{grid-template-columns:repeat(7,1fr)} .day{font-size:13px} .line p{font-size:16px} .title{font-size:22px}}
+
+  .toast{position:fixed;inset:auto 0 18px 0;display:flex;justify-content:center;pointer-events:none}
+  .toast span{pointer-events:auto;background:#101733;border:1px solid var(--ring);padding:10px 14px;border-radius:12px}
+
+  .small{font-size:12px;color:#a7b3d6}
+  .hint{font-size:12.5px;color:#d3dcff;background:#16214a;border:1px solid #2e4489;padding:10px 12px;border-radius:10px}
+
+  /* 연속 말하기 패널 */
+  .practice{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.55); z-index:9999;}
+  .practice .box{width:min(720px,94vw); max-height:92vh; overflow:auto; background:#101733; border:1px solid var(--ring); border-radius:16px; padding:16px; box-shadow:var(--shadow);}
+  .practice .box h3{margin:0 0 12px; font-size:18px;}
+  .practice .ref{font-size:14.5px; color:#cfe0ff; margin:6px 0 12px; white-space:pre-wrap; line-height:1.6}
+  .practice .meta{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px}
+  .practice .result{margin-top:12px; padding:12px; border:1px solid var(--ring); border-radius:12px; background:#0f1731}
+  .feedback{display:block; font-size:12.5px; color:#cfe0ff; opacity:.95}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Daily 3 Lines <span class="badge">100일 챌린지</span></h1>
+      <div style="margin-left:auto; display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn ghost" id="btnRetry">⟲ 다시 하기</button>
+        <button class="btn warn" id="btnReset">⟲ 전체 초기화</button>
+      </div>
+    </header>
+
+    <nav>
+      <button class="tab active" data-view="home">오늘의 학습</button>
+      <button class="tab" data-view="challenge">챌린지</button>
+      <button class="tab" data-view="progress">기록</button>
+
+      <div style="display:flex; gap:8px; align-items:center; margin-left:auto; flex-wrap:wrap">
+        <label class="small" for="voiceSelect">Voice</label>
+        <select id="voiceSelect" title="TTS Voice"></select>
+
+        <span class="small">속도</span>
+        <button class="btn" id="rateDown">–</button>
+        <span id="rate" class="small">1.0x</span>
+        <button class="btn" id="rateUp">+</button>
+      </div>
+    </nav>
+
+    <section id="home" class="grid">
+      <div class="card">
+        <div class="hd">
+          <div>
+            <div class="subtitle">오늘의 제목 (Day <span id="dayNum">1</span>)</div>
+            <div class="title" id="dayTitle">—</div>
+          </div>
+          <!-- 점수 칩은 이 카드에서 제거(요청에 따라 오른쪽 ‘오늘의 목표’ 카드 헤더로 이동) -->
+        </div>
+        <div class="body" id="lines"></div>
+      </div>
+
+      <div class="card">
+        <div class="hd">
+          <h2>오늘의 목표</h2>
+          <!-- 오른쪽에 '80점 이상 성공' 먼저, 그 오른쪽에 점수 칩 배치 -->
+          <div class="kpi">
+            <div class="chip">80점 이상 성공</div>
+            <div class="chip">점수: <span class="score" id="avgScore">—</span></div>
+          </div>
+        </div>
+        <div class="body">
+          <div class="meter" title="3문장 연속 말하기 점수"><i id="meterBar"></i></div>
+          <div style="height:12px"></div>
+          <button class="btn pri" id="markDone" disabled>✔ 오늘 완료로 표시</button>
+          <div style="height:12px"></div>
+          <div class="hint">세 문장을 모두 듣고(▶︎) <b>3문장 연속 말하기(점수 반영)</b>에서 80점 이상이면 완료할 수 있어요.</div>
+          <div style="height:12px"></div>
+          <div class="kpi">
+            <div class="chip">연속일수: <b id="streak">0</b>일</div>
+            <div class="chip">마지막 완료: <span id="lastDone">—</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="challenge" style="display:none">
+      <div class="card">
+        <div class="hd"><h2>100일 챌린지</h2><div class="chip">Day 1 → Day 100</div></div>
+        <div class="body">
+          <div class="calendar" id="challenge100"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="progress" style="display:none">
+      <div class="card">
+        <div class="hd"><h2>점수 기록</h2></div>
+        <div class="body"><div id="history"></div></div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" style="display:none"><span id="toastMsg"></span></div>
+  </div>
+
+<script>
+/* ====== Storage / Date Utilities ====== */
+const LS_USER='d3l_user', LS_PROGRESS='d3l_progress';
+function todayKey(){ const f = new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul', year:'numeric', month:'2-digit', day:'2-digit'}); return f.format(new Date()); }
+function loadUser(){ return JSON.parse(localStorage.getItem(LS_USER)||'{"ttsRate":1,"lang":"en-US","voiceURI":""}'); }
+function saveUser(u){ localStorage.setItem(LS_USER, JSON.stringify(u)); }
+function loadProg(){ return JSON.parse(localStorage.getItem(LS_PROGRESS)||'{}'); }
+function saveProg(p){ localStorage.setItem(LS_PROGRESS, JSON.stringify(p)); }
+
+let user=loadUser(), prog=loadProg();
+if(!prog._startedAt){ prog._startedAt=todayKey(); }
+if(!prog._currentDay){ prog._currentDay=1; }
+if(!prog._lastDate){ prog._lastDate=todayKey(); } // KST 기준 마지막 본 날짜
+if(!Array.isArray(prog._history)) { prog._history = []; }
+saveProg(prog);
+
+function computeDayFromStart(){
+  const start = new Date(prog._startedAt+'T00:00:00+09:00');
+  return Math.max(1, Math.min(100, Math.floor((Date.now()-start)/86400000)+1));
+}
+function getTodayDay(){
+  // _currentDay는 자동으로 새날에 업데이트됨(아래 autoDayRollover 참고)
+  const cur=prog._currentDay || computeDayFromStart();
+  const d=Math.max(1,Math.min(100,cur));
+  if(prog._currentDay!==d){ prog._currentDay=d; saveProg(prog); }
+  return d;
+}
+
+/* ====== Data (100 Titles) ====== */
+const TITLES=[ 'Morning Routine','Commuting','Coffee Break','Emails','Team Meeting','Project Update','Lunch Out','Groceries','Gym','Evening Walk',
+  'Streaming Show','Weekend Plan','Laundry','Room Cleaning','Errands','Bank Visit','Pharmacy','Salon','Car Wash','Pet Care',
+  'Cooking Dinner','Takeout','Birthday Party','Small Talk','Weather Chat','Sports Talk','News Catch-up','Book Club','Movie Night','Concert',
+  'Coffee Chat','Study Session','Library Visit','Note Taking','Presentation Prep','Public Speaking','Mentor Advice','Goal Setting','Habit Tracking','Budgeting',
+  'Online Shopping','Return/Refund','Customer Service','Travel Plan','Packing','Airport','Hotel Check-in','City Tour','Photo Walk','Museum',
+  'Park Picnic','Beach Day','Hiking','Rainy Day','Snow Day','Heat Wave','Cold Snap','Sick Day','Clinic Visit','Dentist Visit',
+  'Back to Work','Overtime','Deadline Push','Celebration','Thank-you Notes','Apology','Making Plans','Canceling Plans','Running Late','Time Management',
+  'Morning Coffee','Afternoon Slump','Power Nap','Evening Class','Night Drive','Late Snack','Phone Call','Video Call','Texting','Social Media',
+  'Digital Detox','Mindfulness','Journaling','Reading','Music Playlist','Podcast','Language Practice','Networking','Interview Prep','Part-time Job',
+  'Side Project','Coding Session','Design Draft','Feedback Round','Revision','Final Review','Presentation Day','Rest Day','Family Dinner','Friends Hangout',
+  'Date Night','Neighborhood Walk','Farmer’s Market','Car Maintenance','House Plants','Recycling','Donation','Volunteering','Community Event','Holiday Prep'
+];
+
+/* ====== Fixed 21-line bank per topic (EN/KR) ======
+   - 템플릿이지만 "고정 21문장"으로 취급됩니다(랜덤 X).
+   - title을 소문자로 끼워 넣어 자연스러운 회화 문장 세트 21개.
+*/
+function bank21(title){
+  const t = title.toLowerCase();
+  return [
+    {en:`I spent some time on ${t} today.`, ko:`오늘 ${t}에 시간을 좀 썼어요.`},
+    {en:`I tried to keep ${t} simple.`, ko:`${t}는 최대한 심플하게 해봤어요.`},
+    {en:`Honestly, ${t} took longer than I expected.`, ko:`솔직히 ${t}가 생각보다 오래 걸렸어요.`},
+    {en:`I finally got around to ${t}.`, ko:`드디어 ${t}를 하게 됐어요.`},
+    {en:`I checked in on ${t} after work.`, ko:`퇴근 후 ${t}를 잠깐 살펴봤어요.`},
+    {en:`Nothing fancy with ${t}—just the basics.`, ko:`${t}는 거창하게 안 하고 기본만 했어요.`},
+    {en:`I made steady progress on ${t}.`, ko:`${t}는 꾸준히 진전이 있었어요.`},
+    {en:`I kept ${t} practical, not overthinking it.`, ko:`${t}는 실용적으로, 과하게 고민하진 않았어요.`},
+    {en:`We talked about ${t} for a bit.`, ko:`${t}에 대해 잠깐 얘기했어요.`},
+    {en:`I’ll try to be more consistent with ${t}.`, ko:`${t}를 더 꾸준히 해볼게요.`},
+    {en:`Next time, I’ll plan ${t} ahead.`, ko:`다음엔 ${t}를 미리 계획해볼게요.`},
+    {en:`Small wins on ${t} still count.`, ko:`${t}에서 작은 성취도 의미 있어요.`},
+    {en:`Slow and steady works for ${t}.`, ko:`${t}는 천천히 꾸준히가 맞는 것 같아요.`},
+    {en:`I had a quick update on ${t}.`, ko:`${t} 관련해 간단히 업데이트했어요.`},
+    {en:`I kept ${t} light but useful.`, ko:`${t}는 가볍게 했지만 유익했어요.`},
+    {en:`I ran into a small hiccup with ${t}.`, ko:`${t}에서 작은 문제가 있었어요.`},
+    {en:`I sorted out a few details for ${t}.`, ko:`${t}의 몇 가지 디테일을 정리했어요.`},
+    {en:`${t} wasn’t perfect, but it moved forward.`, ko:`${t}가 완벽하진 않았지만 진전됐어요.`},
+    {en:`I wrapped up the basics of ${t}.`, ko:`${t}의 기본은 마무리했어요.`},
+    {en:`I set a simple goal for ${t} this week.`, ko:`이번 주 ${t}에 단순한 목표를 세웠어요.`},
+    {en:`I’m glad ${t} is finally on track.`, ko:`${t}가 드디어 궤도에 올라서 다행이에요.`},
+  ];
+}
+
+/* ====== Per-day state ====== */
+function ensureDayState(day){
+  const k='Day'+day;
+  if(!prog[k]){ prog[k]={ comboScore:null, done:false, bankOffset:0 }; }
+  if(typeof prog[k].bankOffset!=='number') prog[k].bankOffset=0;
+  return prog[k];
+}
+
+/* ====== TTS ====== */
+let voices=[]; const voiceSelect=document.getElementById('voiceSelect');
+function loadVoices(){ try{ voices = window.speechSynthesis ? speechSynthesis.getVoices() : []; }catch(e){ voices=[]; } }
+function sortVoices(list){ return [...list].sort((a,b)=>{ const score=v=>(/en[-_]?US/i.test(v.lang)?2:/^en/i.test(v.lang)?1:0); const ds=score(b)-score(a); return ds||((a.name||'').localeCompare(b.name||'')); }); }
+function populateVoiceSelect(){ voiceSelect.innerHTML=''; if(!voices.length){ const o=document.createElement('option'); o.textContent='(no voices)'; o.value=''; voiceSelect.appendChild(o); voiceSelect.disabled=true; return; } voiceSelect.disabled=false; const sorted=sortVoices(voices); for(const v of sorted){ const o=document.createElement('option'); o.value=v.voiceURI||v.name||''; o.textContent=`${v.name} — ${v.lang}`; voiceSelect.appendChild(o);} const byURI=sorted.find(v=>(v.voiceURI||'')===(user.voiceURI||'')); if(byURI) voiceSelect.value=byURI.voiceURI||''; else { const enUS=sorted.find(v=>/en[-_]?US/i.test(v.lang)); voiceSelect.value=(enUS&&(enUS.voiceURI||''))||(sorted[0].voiceURI||''); user.voiceURI=voiceSelect.value; saveUser(user);} }
+async function waitForVoices(timeout=2000){ if(!('speechSynthesis' in window)) return; loadVoices(); if(voices.length) return; await new Promise(res=>{ const t0=Date.now(); function h(){ loadVoices(); if(voices.length||Date.now()-t0>timeout){ speechSynthesis.removeEventListener('voiceschanged',h); res(); } } speechSynthesis.addEventListener('voiceschanged',h); setTimeout(h,timeout); }); }
+if('speechSynthesis' in window){ loadVoices(); window.speechSynthesis.addEventListener('voiceschanged', ()=>{ loadVoices(); populateVoiceSelect(); }); }
+function resumeTTS(){ try{ if('speechSynthesis' in window && speechSynthesis.paused) speechSynthesis.resume(); }catch(_){} }
+window.addEventListener('pointerdown', resumeTTS, { once:true }); document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') resumeTTS(); });
+function getVoice(){ if(!voices.length) return null; if(user.voiceURI){ const v=voices.find(v=>(v.voiceURI||'')===user.voiceURI); if(v) return v; } return voices.find(v=>/en[-_]?US/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang))||voices[0]||null; }
+voiceSelect.addEventListener('change', ()=>{ user.voiceURI=voiceSelect.value||''; saveUser(user); toast('TTS 보이스를 변경했어요.'); });
+function speakOnce(text){ return new Promise(async (resolve)=>{ if(!('speechSynthesis' in window)) return resolve(); await waitForVoices(); resumeTTS(); const utt=new SpeechSynthesisUtterance(text); utt.lang=user.lang||'en-US'; utt.rate=user.ttsRate||1; const v=getVoice(); if(v){ utt.voice=v; utt.lang=v.lang||utt.lang; } utt.onend=()=>resolve(); try{ if(speechSynthesis.speaking) speechSynthesis.cancel(); }catch(_){} setTimeout(()=>speechSynthesis.speak(utt),0); }); }
+async function speakQueue(arr,onStart,onEnd){ try{ onStart&&onStart(); for(const s of arr){ await speakOnce(s); } } finally{ onEnd&&onEnd(); } }
+function speak(text){ return speakQueue([text]); }
+
+/* ====== STT & Scoring ====== */
+function createRecognizer(onResult,onEnd,{continuous=false,interim=false}={}){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){ toast('이 기기에서는 음성 인식이 제한됩니다. (Android Chrome 권장)'); return null; } const rec=new SR(); rec.lang='en-US'; rec.interimResults=!!interim; rec.continuous=!!continuous; rec.maxAlternatives=1; rec.onresult=(e)=>onResult&&onResult(e); rec.onerror=(e)=>{/* 일시 오류는 onend에서 복구 */}; rec.onend=()=>onEnd&&onEnd(); return rec; }
+function levenshtein(a,b){ const m=a.length,n=b.length; const d=Array.from({length:m+1},()=>Array(n+1).fill(0)); for(let i=0;i<=m;i++) d[i][0]=i; for(let j=0;j<=n;j++) d[0][j]=j; for(let i=1;i<=m;i++){ for(let j=1;j<=n;j++){ const c=a[i-1]===b[j-1]?0:1; d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+c);} } return d[m][n]; }
+function norm(s){ return s.toLowerCase().replace(/[^a-z\s]/g,'').replace(/\s+/g,' ').trim(); }
+function scoreSentence(ref,hyp){ const A=norm(ref),B=norm(hyp); if(!B) return 0; const dist=levenshtein(A,B); const max=Math.max(A.length,B.length)||1; return Math.max(0, Math.round((1-dist/max)*100)); }
+function tokenize(s){ return norm(s).split(' ').filter(Boolean); }
+function wordDiffFeedback(ref, hyp){ const R=tokenize(ref), H=tokenize(hyp); if(!H.length) return ['조금 더 크게, 또렷하게 말해줘요!']; const setH=new Set(H); const tips=[]; const missing=R.filter(w=>!setH.has(w)); if(missing.length>=2) tips.push('단어 몇 개 빠졌어요 (끝까지 말하기).'); if(H.length <= Math.max(2, Math.floor(R.length*0.6))) tips.push('조금 더 길게, 전체 문장을 말해보세요.'); if(tips.length<=1) tips.push('억양을 살려 자연스럽게 읽어보세요.'); return tips.slice(0,2); }
+
+/* ====== UI Refs ====== */
+const tabs=document.querySelectorAll('.tab');
+const views={home:document.getElementById('home'),challenge:document.getElementById('challenge'),progress:document.getElementById('progress')};
+const elDayNum=document.getElementById('dayNum'); const elTitle=document.getElementById('dayTitle'); const elLines=document.getElementById('lines');
+const elAvg=document.getElementById('avgScore'); const elMeter=document.getElementById('meterBar');
+const btnRetry=document.getElementById('btnRetry'); const btnReset=document.getElementById('btnReset');
+
+for (const t of tabs){ t.addEventListener('click',()=>{ tabs.forEach(b=>b.classList.remove('active')); t.classList.add('active');
+  Object.values(views).forEach(v=>v.style.display='none'); views[t.dataset.view].style.display='';
+  if(t.dataset.view==='challenge') renderChallenge100();
+  if(t.dataset.view==='progress') renderHistory();
+}); }
+
+/* ====== Toast ====== */
+let toastTimer; function toast(msg){ clearTimeout(toastTimer); const el=document.getElementById('toast'); const m=document.getElementById('toastMsg'); m.textContent=msg; el.style.display='flex'; toastTimer=setTimeout(()=>el.style.display='none', 1800); }
+
+/* ====== TTS rate ====== */
+const elRate=document.getElementById('rate');
+elRate.textContent=(user.ttsRate||1).toFixed(1)+'x';
+document.getElementById('rateDown').onclick=()=>{ user.ttsRate=Math.max(.6, Math.round(((user.ttsRate||1)-.1)*10)/10); elRate.textContent=user.ttsRate.toFixed(1)+'x'; saveUser(user); };
+document.getElementById('rateUp').onclick=()=>{ user.ttsRate=Math.min(1.4, Math.round(((user.ttsRate||1)+.1)*10)/10); elRate.textContent=user.ttsRate.toFixed(1)+'x'; saveUser(user); };
+
+/* ====== Render Today (fixed 21 bank, 3 lines per view) ====== */
+function renderToday(){
+  const day=getTodayDay(); const state=ensureDayState(day);
+  const title=TITLES[day-1]; const bank = bank21(title);
+  const start = (state.bankOffset||0) % 21;
+  const lines = [0,1,2].map(i=> bank[(start+i)%21]);
+
+  elDayNum.textContent=day; elTitle.textContent=title; elLines.innerHTML='';
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition; const sttSupported=!!SR;
+
+  lines.forEach((pair)=>{
+    const text = pair.en;
+    const line=document.createElement('div'); line.className='line';
+
+    const pEn=document.createElement('p'); pEn.textContent=text; line.appendChild(pEn);
+    const pKo=document.createElement('p'); pKo.textContent=pair.ko; pKo.className='ko'; line.appendChild(pKo);
+
+    const row=document.createElement('div'); row.className='row';
+
+    const btnPlay=document.createElement('button'); btnPlay.className='btn'; btnPlay.textContent='▶︎ 듣기';
+    btnPlay.onclick=()=>{ speak(text); };
+
+    const btnRec=document.createElement('button'); btnRec.className='btn pri'; btnRec.textContent='● 말하기(연습)';
+    const btnStop=document.createElement('button'); btnStop.className='btn'; btnStop.textContent='■ 중지'; btnStop.disabled=true;
+    if(!sttSupported){ btnRec.disabled=true; btnStop.disabled=true; btnRec.title='이 기기에서는 음성 인식이 제한됩니다.'; }
+
+    const scoreBox=document.createElement('span'); scoreBox.className='score'; scoreBox.style.marginLeft='6px';
+    const fbBox=document.createElement('span'); fbBox.className='feedback'; fbBox.textContent='';
+
+    // 연습: 반드시 사용자가 중지 눌러야 종료(자동 종료시 재시작)
+    let rec=null, recActive=false, hypAccum='';
+    function setRecUI(active){ if(active){ btnRec.classList.add('rec'); btnRec.textContent='● 듣는 중…(연습)'; } else { btnRec.classList.remove('rec'); btnRec.textContent='● 말하기(연습)'; } }
+    function startLineRec(){
+      rec = createRecognizer((e)=>{
+        for(let i=e.resultIndex;i<e.results.length;i++){
+          const r=e.results[i];
+          if(r.isFinal){ hypAccum += (hypAccum?' ':'') + r[0].transcript; }
+        }
+      }, ()=>{
+        if(recActive){ try{ rec=null; setTimeout(startLineRec, 200); }catch(_){} }
+        else {
+          const s=scoreSentence(text,hypAccum);
+          const fb = (s===100) ? ['잘했어요!'] : wordDiffFeedback(text,hypAccum);
+          scoreBox.textContent=`연습 점수 ${s}%`;
+          fbBox.textContent=fb.join(' · ');
+          btnRec.disabled=false; btnStop.disabled=true; btnStop.textContent='■ 중지';
+          setRecUI(false);
+        }
+      }, {continuous:true, interim:false});
+      if(rec){ try{ rec.start(); }catch(_){ toast('마이크 시작 실패. 권한/다른 앱 점검 후 다시 시도해 주세요.'); } }
+    }
+    btnRec.onclick=()=>{ if(rec||!sttSupported) return; recActive=true; hypAccum=''; btnRec.disabled=true; btnStop.disabled=false; setRecUI(true); toast('말해 보세요… (연습)'); startLineRec(); };
+    btnStop.onclick=()=>{ if(!rec) return; recActive=false; try{ rec.stop(); }catch(_){} btnStop.disabled=true; btnStop.textContent='중지됨'; };
+
+    row.appendChild(btnPlay); row.appendChild(btnRec); row.appendChild(btnStop); row.appendChild(scoreBox);
+    line.appendChild(row); line.appendChild(fbBox);
+    elLines.appendChild(line);
+  });
+
+  // 3문장 연속 듣기 & 말하기(점수 반영)
+  const allRow=document.createElement('div'); allRow.className='row';
+
+  const btnAll=document.createElement('button');
+  btnAll.className='btn';
+  btnAll.textContent='▶︎ 3문장 연속 듣기';
+  btnAll.onclick=()=> speakQueue(lines.map(x=>x.en),
+    ()=>{btnAll.disabled=true; btnAll.textContent='▶︎ 재생 중…';},
+    ()=>{btnAll.disabled=false; btnAll.textContent='▶︎ 3문장 연속 듣기';});
+  allRow.appendChild(btnAll);
+
+  const btnRecAll=document.createElement('button');
+  btnRecAll.className='btn pri';
+  btnRecAll.textContent='● 3문장 연속 말하기(점수 반영)';
+  if(!sttSupported){ btnRecAll.disabled=true; btnRecAll.title='이 기기에서는 음성 인식이 제한됩니다.'; }
+  btnRecAll.onclick=()=> practiceReciteOneShot_final(lines.map(x=>x.en), btnRecAll);
+  allRow.appendChild(btnRecAll);
+
+  elLines.appendChild(allRow);
+
+  updateProgress();
+}
+
+/* ====== Progress (연속 말하기 점수만 반영) ====== */
+function updateProgress(){
+  const day=getTodayDay(); const d=ensureDayState(day);
+  const avg = (typeof d.comboScore==='number') ? d.comboScore : 0;
+  elAvg.textContent = avg>0 ? (avg+'%') : '—';
+  elMeter.style.width = `${avg}%`;
+  const pass = avg>=80;
+  const elDone=document.getElementById('markDone');
+  elDone.disabled=!pass; elDone.textContent=pass?'✔ 조건 충족! 오늘 완료하기':'✔ 오늘 완료로 표시';
+  elDone.onclick=()=>{ if(pass){ markDone(getTodayDay(),avg); } };
+}
+
+function markDone(day,avg){
+  const k='Day'+day; const title=TITLES[day-1];
+  const now=todayKey();
+  prog[k] = { ...(prog[k]||{}), comboScore:avg, done:true };
+  prog.lastDone=k;
+  const prev='Day'+(day-1), prevStreak=prog.streak||0;
+  prog.streak = (day>1 && prog[prev]&&prog[prev].done)? prevStreak+1 : 1;
+  if(!Array.isArray(prog._history)) prog._history=[];
+  prog._history = prog._history.filter(h=>h.day!==day);
+  prog._history.push({ day, date: now, title, avg });
+  saveProg(prog);
+  document.getElementById('streak').textContent=prog.streak;
+  document.getElementById('lastDone').textContent=prog.lastDone;
+  toast('✅ 오늘 학습 완료! 기록에 저장했어요.');
+  renderChallenge100(); renderHistory();
+}
+
+/* ====== 3문장 연속 말하기: ‘중지’ 누르기 전 자동재시작 ====== */
+function concatenateLines(lines){ return lines.join(' '); }
+function practiceReciteOneShot_final(lines, triggerBtn){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ toast('이 브라우저는 음성 인식을 지원하지 않아요.'); return; }
+
+  const origText = triggerBtn ? triggerBtn.textContent : '';
+  function restoreTrigger(){
+    if(triggerBtn){
+      triggerBtn.classList.remove('rec');
+      triggerBtn.disabled = false;
+      triggerBtn.textContent = origText || '● 3문장 연속 말하기(점수 반영)';
+    }
+  }
+
+  const wrap=document.createElement('div'); wrap.className='practice';
+  const box=document.createElement('div'); box.className='box';
+  const refs = lines.map((s,i)=>`${i+1}. ${s}`).join('\n');
+  box.innerHTML = `
+    <h3>🎤 3문장 연속 말하기 (점수 반영)</h3>
+    <div class="ref">아래 3문장을 한 번에 자연스럽게 말해 보세요.\n\n${refs}</div>
+    <div class="meta">
+      <button class="btn pri" id="btnStart">● 말하기 시작</button>
+      <button class="btn" id="btnStop" disabled>■ 중지</button>
+      <span class="small">여러 번 시도 가능. <b>닫기</b>를 누른 시점의 점수가 반영됩니다.</span>
+    </div>
+    <div class="result" id="resultBox" style="display:none">
+      <div>점수: <b id="sumScore">—</b></div>
+      <div class="feedback" id="sumFb"></div>
+      <div style="margin-top:8px"><button class="btn" id="btnClosePanel">닫기</button></div>
+    </div>
+  `;
+  wrap.appendChild(box); document.body.appendChild(wrap);
+
+  const btnStart = box.querySelector('#btnStart');
+  const btnStop  = box.querySelector('#btnStop');
+  const resultBox= box.querySelector('#resultBox');
+  const sumScore = box.querySelector('#sumScore');
+  const sumFb    = box.querySelector('#sumFb');
+
+  let rec=null, finalText='', lastScore=null, lastFb='';
+  let recActive=false;   // 사용자가 ‘중지’ 누르기 전 true
+  let canStart=true;
+
+  function resetStartUI(){ btnStart.classList.remove('rec'); btnStart.textContent='● 말하기 시작'; btnStart.disabled=false; }
+  function startRecognizer(){
+    rec = createRecognizer(onResult, onEnd, {continuous:true, interim:false});
+    if(rec){ try{ rec.start(); }catch(_){ canStart=true; resetStartUI(); btnStop.disabled=true; toast('마이크 시작 실패. 다시 시도해 주세요.'); } }
+    else { canStart=true; resetStartUI(); btnStop.disabled=true; }
+  }
+
+  function onResult(e){
+    for (let i=e.resultIndex;i<e.results.length;i++){
+      const r=e.results[i];
+      if(r.isFinal) finalText += (finalText?' ':'') + r[0].transcript;
+    }
+  }
+  function onEnd(){
+    if(recActive){ try{ rec=null; setTimeout(startRecognizer, 200); }catch(_){}; return; }
+    const refAll = concatenateLines(lines);
+    const sc = scoreSentence(refAll, finalText);
+    const fb = (sc===100) ? ['잘했어요!'] : wordDiffFeedback(refAll, finalText);
+
+    lastScore = isNaN(sc)? null : sc; lastFb = fb.join(' · ');
+    sumScore.textContent = (lastScore==null)? '—' : (lastScore + '%');
+    sumFb.textContent = lastFb; resultBox.style.display = '';
+
+    btnStop.disabled = true; btnStop.textContent = '중지됨';
+    resetStartUI(); rec=null; setTimeout(()=>{ canStart=true; }, 200);
+  }
+
+  btnStart.onclick = ()=>{
+    if(!canStart || recActive) return;
+    canStart=false; finalText='';
+    recActive=true;
+    if(triggerBtn){ triggerBtn.classList.add('rec'); triggerBtn.disabled=true; triggerBtn.textContent='● 연속 말하기 중…'; }
+    btnStart.classList.add('rec'); btnStart.textContent='● 듣는 중…'; btnStart.disabled=true;
+    btnStop.disabled=false; btnStop.textContent='■ 중지';
+    setTimeout(startRecognizer, 150);
+    toast('한 번에 3문장을 말해 보세요…');
+  };
+
+  btnStop.onclick = ()=>{
+    if(!recActive) return;
+    recActive=false;                 // 사용자가 눌러야 종료
+    if(rec){ try{ rec.stop(); }catch(_){ } }
+    btnStop.disabled = true; btnStop.textContent = '중지됨';
+  };
+
+  box.querySelector('#btnClosePanel').onclick = ()=>{
+    try{ if(recActive && rec){ recActive=false; rec.abort(); } }catch(_){}
+    document.body.removeChild(wrap);
+    restoreTrigger();
+    if(lastScore!=null){
+      const day=getTodayDay(); const d=ensureDayState(day);
+      d.comboScore = lastScore; saveProg(prog);
+      updateProgress();
+      toast(`점수 ${lastScore}% 반영 완료`);
+    } else {
+      toast('점수 없이 닫았습니다.');
+    }
+  };
+}
+
+/* ====== 100-Day Calendar & History ====== */
+function renderChallenge100(){
+  const grid=document.getElementById('challenge100'); grid.innerHTML='';
+  const cur=getTodayDay();
+  for(let i=1;i<=100;i++){
+    const cell=document.createElement('div'); cell.className='day'; cell.textContent=i;
+    const k='Day'+i; if(prog[k] && prog[k].done){ cell.classList.add('done'); cell.style.borderColor='#3b82f6'; }
+    if(i===cur){ cell.style.outline='2px solid #5b8cff'; cell.style.color='#e8eefc'; }
+    cell.title=k+(i===cur?' • today':'');
+    cell.onclick=()=>{ prog._currentDay=i; saveProg(prog); tabs.forEach(b=>{ if(b.dataset.view==='home'){ b.click(); }}); renderToday(); };
+    grid.appendChild(cell);
+  }
+}
+
+function renderHistory(){
+  const box=document.getElementById('history');
+  let list = Array.isArray(prog._history) ? [...prog._history] : [];
+  if (!list.length){
+    list = Object.entries(prog)
+      .filter(([k,v])=>/^Day\d+$/.test(k) && v && typeof v.comboScore==='number')
+      .map(([k,v])=>({ day: parseInt(k.slice(3)), date: '', title: TITLES[parseInt(k.slice(3))-1], avg: v.comboScore }));
+  }
+  list.sort((a,b)=> a.day - b.day);
+  if(!list.length){ box.innerHTML='<div class="small">아직 기록이 없습니다.</div>'; return; }
+  const frag=document.createDocumentFragment();
+  list.forEach(item=>{
+    const div=document.createElement('div'); div.className='line';
+    const dateTxt = item.date ? ` <span class="small">(${item.date})</span>` : '';
+    div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
+      <b>Day ${item.day} — ${item.title}${dateTxt}</b><span class="score">${item.avg}%</span></div>`;
+    frag.appendChild(div);
+  });
+  box.innerHTML=''; box.appendChild(frag);
+}
+
+/* ====== Shortcuts ====== */
+btnRetry.onclick=()=>{
+  const day=getTodayDay(); const k='Day'+day; const st=ensureDayState(day);
+  // 점수/완료 리셋 + 3문장 다음 묶음으로 이동
+  st.comboScore=null; st.done=false;
+  st.bankOffset = ((st.bankOffset||0) + 3) % 21;
+  saveProg(prog);
+  renderToday(); updateProgress();
+  toast('🔁 다음 3문장으로 바꿨어요.');
+};
+btnReset.onclick=()=>{ if(!confirm('정말 전체 데이터를 초기화할까요? (취소 불가)')) return;
+  localStorage.removeItem(LS_PROGRESS); prog=loadProg();
+  prog._startedAt=todayKey(); prog._currentDay=1; prog._lastDate=todayKey(); prog._history=[];
+  saveProg(prog);
+  renderToday(); renderChallenge100(); renderHistory(); updateProgress(); toast('🧹 모든 데이터가 초기화됐어요.');
+};
+
+/* ====== Auto Day Rollover (KST) ======
+   - 한국시간 자정이 지나면 자동으로 Day 업데이트 & 화면 갱신
+*/
+function autoDayRolloverTick(){
+  const nowKey = todayKey();
+  if(prog._lastDate !== nowKey){
+    prog._lastDate = nowKey;
+    // 시작일 기준 Day 자동 계산
+    prog._currentDay = computeDayFromStart();
+    // 새 날에는 해당 Day 상태 초기화(문장 뭉치 처음부터 보여주도록 bankOffset=0)
+    const k='Day'+prog._currentDay;
+    if(!prog[k]) prog[k]={ comboScore:null, done:false, bankOffset:0 };
+    saveProg(prog);
+    renderToday(); renderChallenge100(); updateProgress();
+    toast('📅 새로운 날이 시작되어 주제를 바꿨어요!');
+  }
+}
+setInterval(autoDayRolloverTick, 60*1000); // 1분마다 체크
+// 앱 진입 직후에도 한번 확인
+autoDayRolloverTick();
+
+/* ====== PWA ====== */
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js').catch(()=>{}); }); }
+
+/* ====== Boot ====== */
+function initHeaderKPI(){ document.getElementById('streak').textContent = prog.streak||0; document.getElementById('lastDone').textContent = prog.lastDone||'—'; }
+function updateHeaderKPI(){ document.getElementById('streak').textContent = prog.streak||0; document.getElementById('lastDone').textContent = prog.lastDone||'—'; }
+function boot(){ initHeaderKPI(); renderToday(); renderChallenge100(); updateProgress(); }
+boot();
+</script>
+</body>
+</html>
